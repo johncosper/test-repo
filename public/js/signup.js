@@ -11,50 +11,30 @@ $(document).ready(function() {
   signUpForm.on('submit', function(event) {
     event.preventDefault();
     const userData = {
-      email: emailInput.val().trim(),
-      password: passwordInput.val().trim(),
+      user: {
+        email: emailInput.val().trim(),
+        password: passwordInput.val().trim(),
+      },
+      hero: {
+        name: heroInput.val().trim(),
+      }
     };
 
-    const heroData = {
-      name: heroInput.val().trim(),
-    };
-
-    if (!heroData.name) {
-      return;
-    }
-
-    if (!userData.email || !userData.password) {
+    if (!userData.user.email || !userData.user.password || !userData.hero.name) {
       return;
     }
     // If we have an email and password, run the signUpUser function
-    signUpUser(userData.email, userData.password);
+    signUpUser(userData);
     emailInput.val('');
     passwordInput.val('');
-
-    signUpHero(heroData.name);
     heroInput.val('');
   });
   // Does a post to the signup route. If successful, we are redirected to the members page
   // Otherwise we log any errors
-  function signUpUser(email, password) {
-    $.post('/api/signup', {
-      email: email,
-      password: password,
-    })
+  function signUpUser(userData) {
+    $.post('/api/signup', userData)
         .then(function(data) {
           console.log(email);
-          window.location.replace('/members');
-        // If there's an error, handle it by throwing up a bootstrap alert
-        })
-        .catch(handleLoginErr);
-  }
-
-  function signUpHero(name) {
-    $.post('/api/signup', {
-      name: name,
-    })
-        .then(function(data) {
-          console.log(name);
           window.location.replace('/members');
         // If there's an error, handle it by throwing up a bootstrap alert
         })

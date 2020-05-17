@@ -20,30 +20,40 @@ module.exports = function(app) {
   // otherwise send back an error
   app.post('/api/signup', function(req, res) {
     db.User.create({
-      email: req.body.email,
-      password: req.body.password,
+      email: req.body.user.email,
+      password: req.body.user.password,
     })
-        .then(function() {
-          res.redirect(307, '/api/login');
-        })
-        .catch(function(err) {
-          res.status(401).json(err);
+        .then(function(response) {
+          db.Hero.create({
+            name: req.body.hero.name,
+            UserId: response.id
+          })
+              .then(function(response){
+                db.Inventory.create({
+                  HeroId: response.id
+                });
+              })
+                .then (function(response) {
+                  db.Item.create({
+                    name: "Rusty_Sword",
+                    attack_points: 5,
+                    InventoryItemId: response.id
+                  });
+                  db.Item.create({
+                    name: "Healing_Potion",
+                    healing_points: 10,
+                    IventoryItemId: response.id 
+                  });
+                })
+                  .then(function(result) {
+                    console.log(result);
+                    res.status(201);
+                  })
+                  .catch(function(err) {
+                    res.status(500).json(err);
+                  });
         });
   });
-
-  app.post('/api/signup', function(req, res) {
-    db.Hero.create({
-      name: req.body.name,
-    })
-        .then(function() {
-          console.log(name);
-          res.redirect(307, '/api/login');
-        })
-        .catch(function(err) {
-          res.status(401).json(err);
-        });
-  });
-
   // Route for logging user out
   app.get('/logout', function(req, res) {
     req.logout();
