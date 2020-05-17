@@ -26,25 +26,8 @@ module.exports = function(app) {
         .then(function(response) {
           db.Hero.create({
             name: req.body.hero.name,
-            UserId: response.id
+            UserId: response.id,
           })
-              .then(function(response){
-                db.Inventory.create({
-                  HeroId: response.id
-                });
-              })
-                .then (function(response) {
-                  db.Item.create({
-                    name: "Rusty_Sword",
-                    attack_points: 5,
-                    InventoryItemId: response.id
-                  });
-                  db.Item.create({
-                    name: "Healing_Potion",
-                    healing_points: 10,
-                    IventoryItemId: response.id 
-                  });
-                })
                   .then(function(result) {
                     console.log(result);
                     res.status(201);

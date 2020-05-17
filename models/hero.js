@@ -12,6 +12,14 @@ module.exports = function(sequelize, DataTypes) {
     attack_points: {
       type: DataTypes.INTEGER,
       defaultValue: '20',
+    },
+    weapon_power: {
+        type: DataTypes.INTEGER,
+        defaultValue: 10
+    },
+    potion_count: {
+        type: DataTypes.INTEGER,
+        defaultValue: 2
     }
   });
 
@@ -21,12 +29,6 @@ module.exports = function(sequelize, DataTypes) {
       foreignKey: {
         allowNull: false
       },
-    });
-
-    Hero.hasOne(models.Inventory, {
-      foreignKey: {
-        allowNull: false
-      }
     });
   };
 
